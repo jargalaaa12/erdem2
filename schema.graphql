@@ -1,0 +1,55 @@
+type SportType {
+    id: ID!
+    sportType: String!
+    teams: [Team]
+}
+
+type Team {
+    id: ID!
+    teamName: String!
+    establishedDate: String!
+    sportTypeId: ID!
+    players: [Player] 
+}
+
+
+type Player {
+    id: ID!
+    playerName: String!
+    number: Int!
+    gender: String!
+    dateOfBirth: String!
+    teamId: ID!
+}
+
+
+type Query {
+    getSportTypes: [SportType]
+    getTeams: [Team]
+    getPlayers: [Player]
+    getDbInfo: DbInfo
+}
+
+
+type Mutation {
+    addTeam(teamName: String!, establishedDate: String!, sportTypeId: ID!): Team
+    addPlayer(playerName: String!, number: Int!, gender: String!, dateOfBirth: String!, teamId: ID!): Player
+    editTeam(id: ID!, teamName: String!, establishedDate: String!, sportTypeId: ID!): Team
+    editPlayer(id: ID!, playerName: String!, number: Int!, gender: String!, dateOfBirth: String!, teamId: ID!): Player
+    deleteTeam(id: ID!): ID
+    deletePlayer(id: ID!): ID
+    addSportType(sportType: String!): SportType
+    editSportType(id: ID!, sportType: String!): SportType
+    deleteSportType(id: ID!): ID
+}
+
+type DbInfo {
+    sportTypeCount: Int
+    teamCount: Int
+    playerCount: Int
+}
+
+
+type DeleteResponse {
+    deleted: Int!
+}
