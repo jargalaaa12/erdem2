@@ -224,18 +224,11 @@ def resolve_delete_sport_type(_, info, id):
     conn.close()
     return {"deleted": id}
 
+
 @app.route("/graphql", methods=["POST"])
 def graphql_server():
     data = request.get_json()
-    success, result = graphql_sync(
-        schema,
-        data,
-        context_value=request,
-        debug=app.debug
-    )
-    if not success:
-        print(result)  
-    return jsonify(result), 200 if success else 400
+    return schema.execute(data)
 
 
 def init_db():
