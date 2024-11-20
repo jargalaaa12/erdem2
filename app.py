@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from ariadne import ObjectType, QueryType, MutationType, make_executable_schema, graphql_sync, gql
 import sqlite3
-from faker import Faker
+# from faker import Faker
 
 with open("schema.graphql") as f:
     type_defs = gql(f.read())
@@ -11,6 +11,11 @@ app = Flask(__name__)
 query = QueryType()
 mutation = MutationType()
 # fake = Faker()
+
+
+@app.route("/")
+def hello_world():
+    return "<p>Hello, World!</p>"
 
 def get_db_connection():
     conn = sqlite3.connect("sport.db")
