@@ -358,6 +358,44 @@ with open("schema.graphql") as f:
             }
             for row in players
         ]
+    @query.field("getPlayerById")
+    def resolve_get_player_by_id(_, info, id):
+        conn = get_db_connection()
+        player = conn.execute("SELECT * FROM player WHERE id = ?", (id,)).fetchone()
+        conn.close()
+
+        if player:
+            return {
+                "id": player["id"],
+                "playerName": player["player_name"],
+                "number": player["number"],
+                "gender": player["gender"],
+                "dateOfBirth": player["date_of_birth"],
+                "teamId": player["team_id"]
+            }
+        else:
+            return None  
+        
+    @query.field("getPlayersByIds")
+    def resolve_get_players_by_ids(_, info, ids):
+        conn = get_db_connection()
+        query = "SELECT * FROM player WHERE id IN ({})".format(','.join(['?'] * len(ids)))
+        players = conn.execute(query, ids).fetchall()
+        conn.close()
+
+        return [
+            {
+                "id": player["id"],
+                "playerName": player["player_name"],
+                "number": player["number"],
+                "gender": player["gender"],
+                "dateOfBirth": player["date_of_birth"],
+                "teamId": player["team_id"]
+            }
+            for player in players
+    ]
+
+
 
     @query.field("getDbInfo")
     def resolve_get_db_info(*_):
@@ -447,7 +485,6 @@ with open("schema.graphql") as f:
         conn.close()
         return {"id": new_id, "playerName": playerName, "number": number, "gender": gender, "dateOfBirth": dateOfBirth, "teamId": teamId}
 
-    # Initialize schema before defining routes
     schema = make_executable_schema(type_defs, query, mutation)
 
     @app.route("/")

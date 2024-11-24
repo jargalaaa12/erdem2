@@ -27,9 +27,11 @@ type Query {
     getSportTypes: [SportType]
     getTeams: [Team]
     getPlayers: [Player]
+    getPlayerById(id: ID!): Player 
+    getPlayersByIds(ids: [ID!]!): [Player]  
     getDbInfo: DbInfo
 }
-
+*
 
 type Mutation {
     addTeam(teamName: String!, establishedDate: String!, sportTypeId: ID!): Team
